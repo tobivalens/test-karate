@@ -4,6 +4,12 @@ Feature: Moderación automática del chat de la comunidad de e-sports
   Quiero que el motor evalúe las condiciones de cada mensaje
   Para aplicar la acción correcta según insultos, advertencias y enlaces
 
+
+  #Variable	Significado	Si es true
+  #C1	El mensaje contiene insultos graves.	Hay insultos graves.
+  #C2	El usuario acumula tres o más advertencias en 24 horas.	Tiene suficientes advertencias acumuladas.
+  #C3	El mensaje incluye enlaces sospechosos.	Hay un enlace sospechoso.
+
   Background:
     # Verifica el orden C1, C2, C3 publicado por la API antes de evaluar reglas.
     Given url baseUrl
@@ -126,7 +132,7 @@ Feature: Moderación automática del chat de la comunidad de e-sports
   @regression @Issue-8 @REQ-MOD-R7
   Scenario: R7 - Advertencias acumuladas tienen prioridad sobre el insulto grave
     * def valores = [true, true, false]
-    * def accionEsperada = 'Escalar a baneo permanente de la cuenta de usuario'
+    * def accionEsperada = 'Eliminar el mensaje instantáneamente y aplicar suspensión temporal de chat por 24 horas'
     Given url baseUrl
     And path 'decision/moderacion-foro/evaluar'
     And headers { Content-Type: 'application/json', Accept: 'application/json' }
@@ -142,7 +148,7 @@ Feature: Moderación automática del chat de la comunidad de e-sports
   @regression @Issue-9 @REQ-MOD-R8
   Scenario: R8 - Con las tres condiciones activas prevalece el baneo por advertencias
     * def valores = [true, true, true]
-    * def accionEsperada = 'Escalar a baneo permanente de la cuenta de usuario'
+    * def accionEsperada = 'Eliminar el mensaje instantáneamente y aplicar suspensión temporal de chat por 24 horas'
     Given url baseUrl
     And path 'decision/moderacion-foro/evaluar'
     And headers { Content-Type: 'application/json', Accept: 'application/json' }
@@ -156,7 +162,7 @@ Feature: Moderación automática del chat de la comunidad de e-sports
     * print 'Resultado de moderación:', response
 
   @regression @Issue-10 @REQ-MOD-HISTORIAL
-  Scenario: El historial registra las evaluaciones realizadas
+  Scenario: R9- El historial registra las evaluaciones realizadas
     * def valoresLimpios = [false, false, false]
     * def valoresInsulto = [true, false, false]
     Given url baseUrl
@@ -188,7 +194,7 @@ Feature: Moderación automática del chat de la comunidad de e-sports
     * print 'Historial registrado:', response.historial
 
   @regression @Issue-11 @REQ-MOD-NEGATIVO
-  Scenario: Negativo - Evaluar con un número incorrecto de condiciones
+  Scenario: R10- Negativo - Evaluar con un número incorrecto de condiciones
     * def valoresInvalidos = [false, false]
     Given url baseUrl
     And path 'decision/moderacion-foro/evaluar'

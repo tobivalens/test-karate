@@ -4,7 +4,7 @@ Feature: Control de estados de la lavadora industrial automatizada
   Quiero validar las transiciones de estado según los eventos recibidos
   Para asegurar que el ciclo de lavado y la parada de emergencia funcionan correctamente
 
-  @smoketest @Issue-13 @REQ-LAV-A
+  @smoketest @Issue-12 @REQ-LAV-A
   Scenario: Cerrar tapa inicia el llenado de agua
     * def inicial = call read('@reiniciar')
     * def estadoInicial = call read('@consultarEstado')
@@ -21,7 +21,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.accion == 'Bloquear pestillo'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-14 @REQ-LAV-B
+  @regression @Issue-13 @REQ-LAV-B
   Scenario: Nivel de agua correcto inicia el lavado
     * def inicial = call read('@irAS2')
     * def estadoInicial = call read('@consultarEstado')
@@ -38,7 +38,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.accion == 'Activar motor'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-15 @REQ-LAV-C1
+  @regression @Issue-14 @REQ-LAV-C1
   Scenario: Fin Lavado desde Lavando pasa a Centrifugando
     * def inicial = call read('@irAS3')
     * def estadoInicial = call read('@consultarEstado')
@@ -53,7 +53,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.estadoNuevo == 'S4 (Centrifugando)'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-16 @REQ-LAV-C2
+  @regression @Issue-15 @REQ-LAV-C2
   Scenario: Fin Lavado desde Centrifugando regresa a Tapa Abierta
     * def inicial = call read('@irAS4')
     * def estadoInicial = call read('@consultarEstado')
@@ -68,7 +68,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.estadoNuevo == 'S1 (Tapa Abierta)'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-17 @REQ-LAV-D1
+  @regression @Issue-16 @REQ-LAV-D1
   Scenario: Apertura forzosa durante el llenado activa la parada de emergencia
     * def inicial = call read('@irAS2')
     * def estadoInicial = call read('@consultarEstado')
@@ -85,7 +85,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.accion == 'Abrir válvula de descarga'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-18 @REQ-LAV-D2
+  @regression @Issue-17 @REQ-LAV-D2
   Scenario: Apertura forzosa durante el lavado activa la parada de emergencia
     * def inicial = call read('@irAS3')
     * def estadoInicial = call read('@consultarEstado')
@@ -102,7 +102,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.accion == 'Abrir válvula de descarga'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-19 @REQ-LAV-D3
+  @regression @Issue-18 @REQ-LAV-D3
   Scenario: Apertura forzosa durante el centrifugado activa la parada de emergencia
     * def inicial = call read('@irAS4')
     * def estadoInicial = call read('@consultarEstado')
@@ -119,7 +119,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.accion == 'Abrir válvula de descarga'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-20 @REQ-LAV-E
+  @regression @Issue-19 @REQ-LAV-E
   Scenario: Reset del operador recupera el sistema desde emergencia
     * def inicial = call read('@irAS5')
     * def estadoInicial = call read('@consultarEstado')
@@ -134,7 +134,7 @@ Feature: Control de estados de la lavadora industrial automatizada
     And match response.estadoNuevo == 'S1 (Tapa Abierta)'
     * print 'Resultado de transición:', response
 
-  @regression @Issue-21 @REQ-LAV-INVALIDAS
+  @regression @Issue-20 @REQ-LAV-INVALIDAS
   Scenario Outline: Bloquear eventos inválidos en los estados de reposo y emergencia
     * def estadoActual = '<estado_actual>'
     # Preparar cada estado desde S1 evita depender del orden previo de los casos.
@@ -171,7 +171,7 @@ Feature: Control de estados de la lavadora industrial automatizada
       | S5: Parada de Emergencia  | Fin Lavado       |
       | S5: Parada de Emergencia  | Apertura Forzosa |
 
-  @regression @Issue-22 @REQ-LAV-INVALIDAS
+  @regression @Issue-21 @REQ-LAV-INVALIDAS
   Scenario Outline: Bloquear eventos inválidos en los estados activos del ciclo
     * def estadoActual = '<estado_actual>'
     # Preparar cada estado desde S1 evita depender del orden previo de los casos.
